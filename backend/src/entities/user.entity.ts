@@ -22,4 +22,5 @@ export class User {
 
   @CreateDateColumn({ name: 'updatedAt' })
   updatedAt: Date;
+  password: string;
 }

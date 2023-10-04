@@ -6,10 +6,12 @@ import {
   ParseIntPipe,
   Post,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/services/user.service';
-import { HttpCode } from '@nestjs/common/decorators/http';
+import { HttpCode, Put } from '@nestjs/common/decorators/http';
 
 @Controller('users')
 export class UserController {
@@ -21,8 +23,23 @@ export class UserController {
   }
 
   @Get(':id')
-  findById(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return this.service.findById(id);
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return found;
+  }
+
+  @Get(':username')
+  async findByUsername(@Param('username') username: string): Promise<User> {
+    const found = await this.service.findByUsername(username);
+
+    if (!found) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return found;
   }
 
   @Post()
@@ -32,7 +49,30 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.service.delete(id);
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return this.service.delete(found.id);
+  }
+
+  @Get()
+  fin(): Promise<User[]> {
+    return this.service.findAll();
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() user: User,
+  ): Promise<User> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return this.service.update(found.id, user);
   }
 }

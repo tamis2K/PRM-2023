@@ -10,6 +10,8 @@ import { UserService } from './services/user.service';
 import { TopicController } from './controllers/topic.controller';
 import { TopicService } from './services/topic.service';
 import { User } from './entities/user.entity';
+import { AuthController } from './controllers/auth.controller';
+import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [
@@ -30,7 +32,14 @@ import { User } from './entities/user.entity';
     ProfileController,
     UserController,
     TopicController,
+    AuthController,
   ],
-  providers: [AppService, ProfileService, UserService, TopicService],
+  providers: [
+    AppService,
+    ProfileService,
+    UserService,
+    TopicService,
+    AuthService,
+  ],
 })
 export class AppModule {}

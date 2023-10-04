@@ -1,12 +1,15 @@
-import { HttpCode } from '@nestjs/common/decorators/http';
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
-  Body,
-  Delete,
+  Put,
 } from '@nestjs/common';
 import { Topic } from 'src/entities/topic.entity';
 import { TopicService } from 'src/services/topic.service';
@@ -21,18 +24,44 @@ export class TopicController {
   }
 
   @Get(':id')
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Topic> {
-    return this.service.findById(id);
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<Topic> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('Topic not found', HttpStatus.NOT_FOUND);
+    }
+
+    return found;
   }
 
   @Post()
   create(@Body() topic: Topic): Promise<Topic> {
-    return this.service.craete(topic);
+    return this.service.create(topic);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.service.delete(id);
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('Topic not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.service.delete(found.id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() topic: Topic,
+  ): Promise<Topic> {
+    const found = await this.service.findById(id);
+
+    if (!found) {
+      throw new HttpException('Topic not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.service.update(found.id, topic);
   }
 }
