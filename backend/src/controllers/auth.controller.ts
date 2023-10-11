@@ -6,13 +6,17 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { AuthService } from 'src/services/auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly service: AuthService) {}
+  constructor(
+    private readonly service: AuthService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  @Post('si')
+  @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signIn(@Body() credential: Record<string, string>) {
     const found = await this.service.validateCredential(
@@ -24,8 +28,11 @@ export class AuthController {
       throw new UnauthorizedException();
     }
 
+    const payload = { userId: found.id, userName: found.username };
+    const token = await this.jwtService.signAsync(payload);
+
     return {
-      status: 'deu certo',
+      accessToken: token,
     };
   }
 }

@@ -17,10 +17,9 @@ export class User {
   @Column({ length: 250 })
   description: string;
   @Column({ nullable: false, length: 20 })
+  password: string;
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
-
   @CreateDateColumn({ name: 'updatedAt' })
   updatedAt: Date;
-  password: string;
 }
