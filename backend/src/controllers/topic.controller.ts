@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,11 +12,13 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Topic } from 'src/entities/topic.entity';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { TopicService } from 'src/services/topic.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('topics')
 export class TopicController {
   constructor(private readonly service: TopicService) {}

@@ -8,11 +8,14 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/services/user.service';
 import { HttpCode, Put } from '@nestjs/common/decorators/http';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UserController {
   constructor(private readonly service: UserService) {}
