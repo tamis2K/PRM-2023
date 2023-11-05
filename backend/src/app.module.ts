@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProfileController } from './controllers/profile.controller';
-import { ProfileService } from './services/profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
@@ -42,7 +41,6 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   providers: [
     AppService,
-    ProfileService,
     UserService,
     TopicService,
     AuthService,

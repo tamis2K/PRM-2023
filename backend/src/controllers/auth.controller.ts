@@ -5,15 +5,21 @@ import {
   HttpStatus,
   Post,
   UnauthorizedException,
+  ClassSerializerInterceptor,
+  HttpException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/entities/user.entity';
 import { AuthService } from 'src/services/auth.service';
+import { UserService } from 'src/services/user.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly service: AuthService,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
   @Post('signin')
@@ -38,5 +44,18 @@ export class AuthController {
     return {
       accessToken: token,
     };
+  }
+  @Post('signup')
+  async signUp(@Body() user: User): Promise<User> {
+    const found = await this.userService.findByUsername(user.username);
+
+    if (found) {
+      throw new HttpException(
+        'Este nome de usuário já está em uso',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return this.userService.create(user);
   }
 }

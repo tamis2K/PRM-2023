@@ -36,9 +36,18 @@ function SignUpPage() {
     event.preventDefault();
 
     setLoading(true);
+    setMessegeErro("");
+    setMessegeSuccess("");
 
     try {
       await register(userForm);
+      setUserForm({
+        fullname: "",
+        username: "",
+        password: "",
+        description: "",
+      });
+      setMessegeSuccess("Usuário criado com sucesso");
     } catch (e) {
       const error = e as Error;
       setMessegeErro(String(error.message));

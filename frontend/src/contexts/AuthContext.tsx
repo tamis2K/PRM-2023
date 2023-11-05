@@ -1,14 +1,15 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { ICredential, IUser } from "../@types";
-import { signIn } from "../services";
+import { signIn, signUp } from "../services";
 import jwtDecode from "jwt-decode";
+import { AxiosError } from "axios";
 
 type AuthContextProps = {
   user: IUser | undefined;
   token: string | undefined;
   login: (credential: ICredential) => Promise<void>;
   logout: () => void;
-  register: (user: IUser) => void;
+  register: (newUser: IUser) => Promise<Record<string, any>>;
 };
 
 export const AuthContext = createContext<AuthContextProps>(
@@ -58,7 +59,21 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       });
   };
   function logout() {}
-  function register() {}
+  async function register(newUser: IUser): Promise<Record<string, any>> {
+    try {
+      const result = await signUp(newUser);
+
+      return new Promise((resolve, reject) => {
+        resolve(result.data);
+      });
+    } catch (e) {
+      const error = e as AxiosError;
+
+      return new Promise((resolve, reject) => {
+        reject(error.response?.data);
+      });
+    }
+  }
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, register }}>
