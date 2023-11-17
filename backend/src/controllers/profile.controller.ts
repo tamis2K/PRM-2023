@@ -1,4 +1,3 @@
-import { ProfileService } from 'src/services/profile.service';
 import {
   ClassSerializerInterceptor,
   Controller,
@@ -11,6 +10,7 @@ import {
 import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/services/user.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('profile')
 export class ProfileController {
   constructor(private userService: UserService) {}

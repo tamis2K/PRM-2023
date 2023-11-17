@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
-import { ApplicationException } from 'src/excpitions';
+import { ApplicationException } from 'src/exceptions';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -14,15 +14,12 @@ export class UserService {
   findAll(): Promise<User[]> {
     return this.repository.find();
   }
-
   findById(id: number): Promise<User> {
     return this.repository.findOneBy({ id: id });
   }
-
   findByUsername(username: string): Promise<User> {
     return this.repository.findOneBy({ username: username });
   }
-
   create(user: User): Promise<User> {
     return this.repository.save(user);
   }
@@ -37,8 +34,8 @@ export class UserService {
     if (!found) {
       throw new ApplicationException('User not found', 404);
     }
-    //Garante que o objeto subistituido o mesmo da requesição
 
+    //Garante que o objeto substituido terá o mesmo ID da requisição
     user.id = id;
 
     return this.repository.save(user);

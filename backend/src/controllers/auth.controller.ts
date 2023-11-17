@@ -1,12 +1,12 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   HttpCode,
+  HttpException,
   HttpStatus,
   Post,
   UnauthorizedException,
-  ClassSerializerInterceptor,
-  HttpException,
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -14,6 +14,7 @@ import { User } from 'src/entities/user.entity';
 import { AuthService } from 'src/services/auth.service';
 import { UserService } from 'src/services/user.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -37,7 +38,7 @@ export class AuthController {
     const payload = {
       userId: found.id,
       userName: found.username,
-      fullname: found.fullname,
+      fullName: found.fullname,
     };
     const token = await this.jwtService.signAsync(payload);
 
@@ -45,6 +46,7 @@ export class AuthController {
       accessToken: token,
     };
   }
+
   @Post('signup')
   async signUp(@Body() user: User): Promise<User> {
     const found = await this.userService.findByUsername(user.username);

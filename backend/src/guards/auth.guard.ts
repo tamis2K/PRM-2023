@@ -4,8 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 import { UserService } from 'src/services/user.service';
 
 @Injectable()
@@ -19,12 +19,14 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
+    //Verifico se o token existe
     if (!token) {
       throw new UnauthorizedException('Token inexistente');
     }
 
     let username = '';
 
+    //Verifico se o token é válido
     try {
       const payload = await this.jwtService.verifyAsync(token);
       username = payload.userName;
@@ -32,6 +34,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Token inválido');
     }
 
+    //To-do: Verificar se o usuário do payload está cadastrado
     const found = await this.userService.findByUsername(username);
 
     if (!found) {

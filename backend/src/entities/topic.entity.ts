@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,7 +14,8 @@ import { User } from './user.entity';
 export class Topic {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ length: 250 })
+
+  @Column({ nullable: false, length: 250 })
   content: string;
 
   @ManyToOne(() => User, { eager: true, nullable: false })

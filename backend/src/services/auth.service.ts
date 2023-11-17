@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
-import { ApplicationException } from 'src/excpitions';
+import { ApplicationException } from 'src/exceptions';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,9 +17,9 @@ export class AuthService {
     if (!found) {
       throw new ApplicationException('Invalid user', 401);
     }
-    
+
     if (found.password !== password) {
-      throw  new ApplicationException('Invalid password', 401)
+      throw new ApplicationException('Invalid password', 401);
     }
 
     return found;

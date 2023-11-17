@@ -11,7 +11,6 @@ type AuthContextProps = {
   logout: () => void;
   register: (newUser: IUser) => Promise<Record<string, any>>;
 };
-
 export const AuthContext = createContext<AuthContextProps>(
   {} as AuthContextProps
 );
@@ -24,6 +23,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
   const [token, setToken] = useState<string>();
 
   useEffect(() => {
+    //Recupera os valores da Local Storage
     const storageToken = localStorage.getItem("token");
     const storageUser = localStorage.getItem("user");
 
@@ -38,16 +38,17 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       .then((result) => {
         const token = result.data.accessToken;
 
+        //Pega o usuário do token
         const payloadDecoded: Record<string, any> = jwtDecode(token);
 
         const userToken: IUser = {
           id: payloadDecoded.userId,
           fullname: payloadDecoded.fullName,
-          username: payloadDecoded.username,
+          username: payloadDecoded.userName,
         };
 
         localStorage.setItem("user", JSON.stringify(userToken));
-        localStorage.setItem("user", token);
+        localStorage.setItem("token", token);
 
         setUser(userToken);
         setToken(token);
@@ -58,7 +59,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
         });
       });
   };
-  function logout() {}
+
   async function register(newUser: IUser): Promise<Record<string, any>> {
     try {
       const result = await signUp(newUser);
@@ -74,6 +75,8 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       });
     }
   }
+
+  function logout() {}
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, register }}>
