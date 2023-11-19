@@ -15,10 +15,10 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Topic } from 'src/entities/topic.entity';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { TopicService } from 'src/services/topic.service';
-import { UserService } from 'src/services/user.service';
+import { Topic } from './topic.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { TopicService } from './topic.service';
+import { UserService } from 'src/users/user.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('topics')

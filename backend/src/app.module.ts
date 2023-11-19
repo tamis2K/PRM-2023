@@ -1,23 +1,19 @@
-import { Topic } from './entities/topic.entity';
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ProfileController } from './controllers/profile.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
-import { TopicController } from './controllers/topic.controller';
-import { TopicService } from './services/topic.service';
-import { User } from './entities/user.entity';
-import { AuthController } from './controllers/auth.controller';
-import { AuthService } from './services/auth.service';
+import { User } from './users/user.entity';
+import { Topic } from './topics/topic.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './users/user.module';
+import { TopicModule } from './topics/topic.module';
+import { AuthModule } from './auth/auth.module';
+import { ProfileModule } from './profiles/profile.module';
+import { CommentModule } from './comments/comment.module';
 
 @Module({
   imports: [
     JwtModule.register({
       global: true,
-      secret: 'matedei',
+      secret: 'materdei',
       signOptions: { expiresIn: '24h' },
     }),
     TypeOrmModule.forRoot({
@@ -27,23 +23,16 @@ import { JwtModule } from '@nestjs/jwt';
       username: 'root',
       password: 'mateus-NBD123',
       database: 'prm_2023',
-      entities: [User, Topic],
       synchronize: true,
+      autoLoadEntities: true,
     }),
-    TypeOrmModule.forFeature([User, Topic]),
+    UserModule,
+    TopicModule,
+    AuthModule,
+    ProfileModule,
+    CommentModule,
   ],
-  controllers: [
-    AppController,
-    ProfileController,
-    UserController,
-    TopicController,
-    AuthController,
-  ],
-  providers: [
-    AppService,
-    UserService,
-    TopicService,
-    AuthService,
-  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

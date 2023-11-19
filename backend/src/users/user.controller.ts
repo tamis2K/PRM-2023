@@ -13,8 +13,8 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from 'src/entities/user.entity';
-import { UserService } from 'src/services/user.service';
+import { User } from './user.entity';
+import { UserService } from './user.service';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
