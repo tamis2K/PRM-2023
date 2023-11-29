@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IComment, ICredential, ITopic, IUser } from "../@types";
+import { IComment, ICredential, ILikes, ITopic, IUser } from "../@types";
 
 //Busca o token da Local Storage
 const token = localStorage.getItem("token");
@@ -14,6 +14,7 @@ const _AUTH = "/auth";
 const _PROFILE = "/profile";
 const _TOPICS = "/topics";
 const _COMMENTS = "/comments";
+const _LIKES = "/likes";
 
 //AUTH
 const signIn = (credential: ICredential) =>
@@ -38,6 +39,10 @@ const createComment = (comment: IComment) => api.post(_COMMENTS, comment);
 const removeComment = (comment: IComment) =>
   api.delete(`${_COMMENTS}/${comment.id}`);
 
+//LIKES
+const createLike = (like: ILikes) => api.post(_LIKES, like);
+const removeLike = (like: ILikes) => api.delete(`${_LIKES}/${like.id}`);
+
 export {
   signIn,
   signUp,
@@ -47,4 +52,6 @@ export {
   getCommentByTopic,
   createComment,
   removeComment,
+  createLike,
+  removeLike,
 };

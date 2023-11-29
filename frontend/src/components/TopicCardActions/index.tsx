@@ -10,14 +10,20 @@ import "./style.css";
 import { ITopic } from "../../@types";
 
 type TopicCardActionsProps = {
+  likends: boolean;
   commented: boolean;
+  totalLikes: number;
   totalComments: number;
   clickComment: () => void;
+  clickLikes: () => void;
 };
 function TopicCardActions({
+  likends,
   commented,
   totalComments,
   clickComment,
+  totalLikes,
+  clickLikes,
 }: TopicCardActionsProps) {
   return (
     <div id="topic-card-actions">
@@ -32,8 +38,13 @@ function TopicCardActions({
       <Button variant="text" size="small" startIcon={<Repeat />}>
         23
       </Button>
-      <Button variant="text" size="small" startIcon={<FavoriteBorder />}>
-        33
+      <Button
+        variant="text"
+        size="small"
+        startIcon={likends ? <FavoriteBorder /> : <FavoriteBorder />}
+        onClick={clickLikes}
+      >
+        {totalLikes}
       </Button>
     </div>
   );

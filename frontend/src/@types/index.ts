@@ -25,3 +25,10 @@ export interface IComment {
   topic?: ITopic;
   createdAt?: Date;
 }
+
+export interface ILikes {
+  id?: number;
+  user?: IUser;
+  comment: IComment;
+  createdAt?: Date;
+}

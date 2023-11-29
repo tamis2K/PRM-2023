@@ -1,5 +1,5 @@
 import { Avatar, Box, TextField, Typography } from "@mui/material";
-import { IComment } from "../../@types";
+import { IComment, ILikes } from "../../@types";
 import { FormattedDate, IntlProvider } from "react-intl";
 import { FormEvent, useState } from "react";
 

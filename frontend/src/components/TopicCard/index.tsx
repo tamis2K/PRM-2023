@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { IComment, ITopic } from "../../@types";
+import { IComment, ILikes, ITopic } from "../../@types";
 import TopicCardActions from "../TopicCardActions";
 import TopicCardBody from "../TopicCardBody";
 import TopicCardHeader from "../TopicCardHeader";
 import { Alert, Snackbar } from "@mui/material";
-import { Comment } from "./../../../../backend/src/comments/comment.entity";
-import { createComment, getCommentByTopic } from "../../services";
+import { createComment, getCommentByTopic, createLike } from "../../services";
 import { useAuth } from "../../hook/useAuth";
 import TopicComment from "../TopicComment";
 
@@ -55,6 +54,25 @@ function TopicCard({ topic }: TopicCardProps) {
   //REPOSTS
 
   //LIKES
+  const [showLikes, setShowLikes] = useState(false);
+  const [like, setLike] = useState<ILikes>({} as ILikes);
+  const [likes, setLikes] = useState<ILikes[]>([]);
+  const [totalLikes, setTotalLikes] = useState(0);
+  const handleClickLikes = () => {
+    setShowLikes(!showLikes);
+  };
+  const postLike = async (): Promise<void> => {
+    const likeForm: ILikes = {
+      user: user,
+      comment: comment,
+    };
+    createLike(likeForm).then((result) => {
+      setLike(result.data);
+      setTotalLikes(totalLikes + 1);
+
+      setLikes([...likes, result.data]);
+    });
+  };
 
   //EFFECT
   useEffect(() => {
@@ -83,6 +101,9 @@ function TopicCard({ topic }: TopicCardProps) {
         commented={Boolean(comment.user)}
         totalComments={totalComments}
         clickComment={handleClickComment}
+        likends={Boolean(like.user)}
+        totalLikes={totalLikes}
+        clickLikes={handleClickLikes}
       />
 
       {showComments && (
